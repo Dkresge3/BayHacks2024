@@ -1,12 +1,11 @@
 import asyncio
-import aiomysql
 from bleak import BleakClient, discover
 from datetime import datetime
 
 # Modify this variable with the name of the device you want to connect to
 device_name = "Emi"
 
-async def connect_and_disconnect(device_name, pool):
+async def connect_and_disconnect(device_name):
     # Discovering nearby Bluetooth devices
     devices = await discover()
 
@@ -19,28 +18,18 @@ async def connect_and_disconnect(device_name, pool):
 
     try:
         print(f"Connecting to {device_name}...")
-        await BleakClient(target_device).connect()
+
         print(f"Connected to {device_name}")
-        connected_time = datetime.now()
+        await BleakClient(target_device).connect()
         await BleakClient(target_device).disconnect()
         print(f"Disconnected from {device_name}")
 
-        async with pool.acquire() as conn:
-            async with conn.cursor() as cur:
-                # Insert device data into MySQL database
-                await cur.execute("INSERT INTO device_data (device_name, connected_time) VALUES (%s, %s)", (device_name, connected_time))
-                await conn.commit()
     except Exception as e:
         print(f"An error occurred while connecting to {device_name}: {e}")
 
 async def main():
-    # Create a connection pool to MySQL database
-    pool = await aiomysql.create_pool(host='Smartcollar', port=3306,
-                                      user='Smartcollar_PROD', password='Smartcollar',
-                                      db='smartcollar_db', loop=loop)
-
     while True:
-        await connect_and_disconnect(device_name, pool)
+        await connect_and_disconnect(device_name)
         await asyncio.sleep(30)  # Pause for 30 seconds before the next iteration
 
 # Running the program
