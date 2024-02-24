@@ -2,6 +2,10 @@ import asyncio
 import aiomysql
 from bleak import BleakClient, discover
 from datetime import datetime
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.DEBUG)  # Set logging level to DEBUG
 
 # Modify this variable with the name of the device you want to connect to
 device_name = "Emi"
@@ -14,17 +18,17 @@ async def connect_and_disconnect(device_name, pool):
     target_device = next((device for device in devices if device.name == device_name), None)
 
     if target_device is None:
-        print(f"Device '{device_name}' not found.")
+        logging.error(f"Device '{device_name}' not found.")
         return
 
     try:
-        print(f"Connecting to {device_name}...")
+        logging.info(f"Connecting to {device_name}...")
         async with BleakClient(target_device) as client:
             await client.connect()
-            print(f"Connected to {device_name}")
+            logging.info(f"Connected to {device_name}")
             connected_time = datetime.now()
             await client.disconnect()
-            print(f"Disconnected from {device_name}")
+            logging.info(f"Disconnected from {device_name}")
 
             async with pool.acquire() as conn:
                 async with conn.cursor() as cur:
@@ -32,7 +36,7 @@ async def connect_and_disconnect(device_name, pool):
                     await cur.execute("INSERT INTO device_data (device_name, connected_time) VALUES (%s, %s)", (device_name, connected_time))
                     await conn.commit()
     except Exception as e:
-        print(f"An error occurred while connecting to {device_name}: {e}")
+        logging.exception(f"An error occurred while connecting to {device_name}: {e}")
 
 async def main():
     # Create a connection pool to MySQL database
