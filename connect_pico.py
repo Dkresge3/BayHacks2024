@@ -4,8 +4,9 @@ from bleak import BleakClient, discover
 from datetime import datetime
 import subprocess
 
-# Modify this variable with the name of the device you want to connect to
-device_name = "Emi"
+# Modify this list with the names of the devices you want to connect to
+device_names = ["Emi", "Butch"]
+
 async def connect_and_disconnect(device_name, pool):
     # Discovering nearby Bluetooth devices
     devices = await discover()
@@ -25,6 +26,7 @@ async def connect_and_disconnect(device_name, pool):
         connected_time = datetime.now()
         await client.disconnect() 
         print(f"Disconnected from {device_name}")
+        
         try:
             create_timer = f"curl localhost:5000/create_timer/{device_name}"
             output_create_time = subprocess.check_output(create_timer, shell=True, text=True)
@@ -54,7 +56,8 @@ async def main():
                                       db='smartcollar_db', loop=loop)
 
     while True:
-        await connect_and_disconnect(device_name, pool)
+        for device_name in device_names:
+            await connect_and_disconnect(device_name, pool)
         await asyncio.sleep(30)  # Pause for 30 seconds before the next iteration
 
 # Running the program
