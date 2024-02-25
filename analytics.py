@@ -1,6 +1,7 @@
 import asyncio
 import aiomysql
 from datetime import datetime, timedelta
+import subprocess
 
 # Database connection parameters
 db_params = {
@@ -42,6 +43,11 @@ async def check_device_status():
 
                         # Check if the device is out of range based on the time threshold
                         if time_difference.total_seconds() >= time_threshold:
+                            try:
+                                # Run the curl command and capture its output
+                                reset_timer_command = f"curl localhost:5000/reset_timer/{device_name}"
+                                output = subprocess.check_output(curl_command, shell=True, text=True)
+                            finally:
                             print(f"The device '{device_name}' is out of range.")
                         else:
                             print(f"The device '{device_name}' is in range.")

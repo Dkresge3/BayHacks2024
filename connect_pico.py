@@ -25,7 +25,8 @@ async def connect_and_disconnect(device_name, pool):
         connected_time = datetime.now()
         await client.disconnect() 
         print(f"Disconnected from {device_name}")
-
+        start_timer = f"curl localhost:5000/start_timer/{device_name}"
+        output = subprocess.check_output(start_timer, shell=True, text=True)
         async with pool.acquire() as conn:
             async with conn.cursor() as cur:
                 # Insert device data into MySQL database
