@@ -15,7 +15,7 @@ db_params = {
 device_name = "Emi"
 
 # Time threshold (in seconds) before considering the device out of range
-time_threshold = 60 * 5  # 5 minutes
+time_threshold = 10  # 5 minutes
 
 async def get_last_connected_time(conn):
     async with conn.cursor() as cur:
