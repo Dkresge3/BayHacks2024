@@ -58,7 +58,7 @@ async def main():
     while True:
         for device_name in device_names:
             await connect_and_disconnect(device_name, pool)
-        await asyncio.sleep(30)  # Pause for 30 seconds before the next iteration
+        await asyncio.sleep(45)  # Pause for 30 seconds before the next iteration
 
 # Running the program
 loop = asyncio.get_event_loop()
