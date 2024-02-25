@@ -6,7 +6,6 @@ import subprocess
 
 # Modify this variable with the name of the device you want to connect to
 device_name = "Emi"
-
 async def connect_and_disconnect(device_name, pool):
     # Discovering nearby Bluetooth devices
     devices = await discover()
@@ -26,8 +25,9 @@ async def connect_and_disconnect(device_name, pool):
         connected_time = datetime.now()
         await client.disconnect() 
         print(f"Disconnected from {device_name}")
-        
         try:
+            create_timer = f"curl localhost:5000/create_timer/{device_name}"
+            output_create_time = subprocess.check_output(create_timer, shell=True, text=True)
             start_timer = f"curl localhost:5000/start_timer/{device_name}"
             output = subprocess.check_output(start_timer, shell=True, text=True)
         except subprocess.CalledProcessError as e:
