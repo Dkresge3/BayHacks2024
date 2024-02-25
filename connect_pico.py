@@ -35,7 +35,7 @@ async def connect_and_disconnect(device_name, pool):
 
 async def main():
     # Create a connection pool to MySQL database
-    pool = await aiomysql.create_pool(host='Smartcollar', port=3306,
+    pool = await aiomysql.create_pool(host='localhost', port=3306,
                                       user='Smartcollar_PROD', password='Smartcollar',
                                       db='smartcollar_db', loop=loop)
 
