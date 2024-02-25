@@ -20,17 +20,17 @@ async def connect_and_disconnect(device_name, pool):
     try:
         print(f"Connecting to {device_name}...")
         client = BleakClient(target_device)
-            await client.connect()
-            print(f"Connected to {device_name}")
-            connected_time = datetime.now()
-            await client.disconnect() 
-            print(f"Disconnected from {device_name}")
+        await client.connect()
+        print(f"Connected to {device_name}")
+        connected_time = datetime.now()
+        await client.disconnect() 
+        print(f"Disconnected from {device_name}")
 
-            async with pool.acquire() as conn:
-                async with conn.cursor() as cur:
-                    # Insert device data into MySQL database
-                    await cur.execute("INSERT INTO device_data (device_name, connected_time) VALUES (%s, %s)", (device_name, connected_time))
-                    await conn.commit()
+        async with pool.acquire() as conn:
+            async with conn.cursor() as cur:
+                # Insert device data into MySQL database
+                await cur.execute("INSERT INTO device_data (device_name, connected_time) VALUES (%s, %s)", (device_name, connected_time))
+                await conn.commit()
     except Exception as e:
         print(f"An error occurred while connecting to {device_name}: {e}")
 
