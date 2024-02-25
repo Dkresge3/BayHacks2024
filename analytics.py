@@ -12,13 +12,13 @@ db_params = {
     'db': 'smartcollar_db'
 }
 
-# Modify this variable with the name of the device you want to track
-device_name = "Emi"
+# Modify this list with the names of the devices you want to track
+device_names = ["Emi", "Butch"]
 
 # Time threshold (in seconds) before considering the device out of range
-time_threshold = 60* 2  # 2 minutes
+time_threshold = 60 * 2  # 2 minutes
 
-async def get_last_connected_time(conn):
+async def get_last_connected_time(conn, device_name):
     async with conn.cursor() as cur:
         await cur.execute("SELECT MAX(connected_time) FROM device_data WHERE device_name = %s", (device_name,))
         result = await cur.fetchone()
@@ -27,14 +27,14 @@ async def get_last_connected_time(conn):
         else:
             return None
 
-async def check_device_status():
+async def check_device_status(device_name):
     while True:
         try:
             # Connect to the database
             async with aiomysql.create_pool(**db_params) as pool:
                 async with pool.acquire() as conn:
                     # Retrieve the last connected time of the device
-                    last_connected_time = await get_last_connected_time(conn)
+                    last_connected_time = await get_last_connected_time(conn, device_name)
 
                     # Calculate the time difference since the last connection
                     if last_connected_time:
@@ -64,7 +64,8 @@ async def check_device_status():
 
 # Running the program
 async def main():
-    await check_device_status()
+    tasks = [check_device_status(device_name) for device_name in device_names]
+    await asyncio.gather(*tasks)
 
 # Run the asyncio event loop
 loop = asyncio.get_event_loop()
