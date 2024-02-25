@@ -26,13 +26,23 @@ async def connect_and_disconnect(device_name, pool):
         connected_time = datetime.now()
         await client.disconnect() 
         print(f"Disconnected from {device_name}")
-        start_timer = f"curl localhost:5000/start_timer/{device_name}"
-        output = subprocess.check_output(start_timer, shell=True, text=True)
+        
+        try:
+            start_timer = f"curl localhost:5000/start_timer/{device_name}"
+            output = subprocess.check_output(start_timer, shell=True, text=True)
+        except subprocess.CalledProcessError as e:
+            print(f"Error running curl command: {e}")
+        except FileNotFoundError:
+            print("Error: curl command not found. Make sure curl is installed.")
+        except Exception as e:
+            print(f"An error occurred while running curl command: {e}")
+            
         async with pool.acquire() as conn:
             async with conn.cursor() as cur:
                 # Insert device data into MySQL database
                 await cur.execute("INSERT INTO device_data (device_name, connected_time) VALUES (%s, %s)", (device_name, connected_time))
                 await conn.commit()
+                
     except Exception as e:
         print(f"An error occurred while connecting to {device_name}: {e}")
 
