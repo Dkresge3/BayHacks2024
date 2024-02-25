@@ -16,7 +16,7 @@ db_params = {
 device_name = "Emi"
 
 # Time threshold (in seconds) before considering the device out of range
-time_threshold = 10  # 5 minutes
+time_threshold = 60* 5  # 5 minutes
 
 async def get_last_connected_time(conn):
     async with conn.cursor() as cur:
@@ -46,9 +46,10 @@ async def check_device_status():
                             try:
                                 # Run the curl command and capture its output
                                 reset_timer_command = f"curl localhost:5000/reset_timer/{device_name}"
-                                output = subprocess.check_output(curl_command, shell=True, text=True)
+                                subprocess.check_output(reset_timer_command, shell=True, text=True)
+                                print(f"The device '{device_name}' is out of range.")
                             finally:
-                            print(f"The device '{device_name}' is out of range.")
+                                pass
                         else:
                             print(f"The device '{device_name}' is in range.")
 
