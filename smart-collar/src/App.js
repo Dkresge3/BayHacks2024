@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Home from './components/Home';
 import Login from './components/Login';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Dog from './components/Dog';
 
 function App() {
   const [navbarVisible, setNavbarVisible] = useState(true);
@@ -26,6 +27,7 @@ function App() {
 				<Routes>
 					<Route path="/" element={<Home />} />
 					<Route path="/login" element={<Login />} />
+          <Route path="/dog" element={<Dog />} />
 				</Routes>
 			</BrowserRouter>
     </div>
