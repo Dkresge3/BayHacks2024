@@ -7,7 +7,7 @@ def test_db_connection(host, user, password, database):
             host="Localhost",
             user="root",
             password="Smartcollar",
-            database="Smartcollar_db"
+            database="smartcollar_db"
         )
         
         # Check if the connection is successful
