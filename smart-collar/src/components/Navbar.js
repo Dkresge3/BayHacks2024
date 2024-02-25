@@ -1,7 +1,6 @@
 import React from 'react';
 import './Navbar.css'
-import Home from './Home';
-import Login from './Login';
+
 
 function Navbar() {
   return (
@@ -13,6 +12,7 @@ function Navbar() {
         <li>
           <a href='Home'>Home</a>
           <a href='Login'> Login</a>
+          <a href='Dog'> Dog</a>
         </li>
       </ul>
       
