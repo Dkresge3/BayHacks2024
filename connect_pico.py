@@ -2,6 +2,7 @@ import asyncio
 import aiomysql
 from bleak import BleakClient, discover
 from datetime import datetime
+import subprocess
 
 # Modify this variable with the name of the device you want to connect to
 device_name = "Emi"
