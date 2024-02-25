@@ -28,7 +28,7 @@ async def connect_and_disconnect(device_name, pool):
         print(f"Disconnected from {device_name}")
         
         try:
-            create_timer = f"curl localhost:5000/create_timer/{device_name}"
+            create_timer = f"curl localhost:5000/set_timer/{device_name}"
             output_create_time = subprocess.check_output(create_timer, shell=True, text=True)
             start_timer = f"curl localhost:5000/start_timer/{device_name}"
             output = subprocess.check_output(start_timer, shell=True, text=True)
