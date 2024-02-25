@@ -20,7 +20,6 @@ async def connect_and_disconnect(device_name, pool):
     try:
         print(f"Connecting to {device_name}...")
         client = BleakClient(target_device)
-        finally:
             await client.connect()
             print(f"Connected to {device_name}")
             connected_time = datetime.now()
